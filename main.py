@@ -1,15 +1,9 @@
-import tkinter as tk
-from tkinter import ttk
+from gui import PrayerTimeGUI
 
 def main():
 
-    window = tk.Tk()
-
-    window.attributes('-fullscreen', True)
-
-    window.bind('<Escape>', lambda event : window.quit())
-
-    window.mainloop()
+    gui = PrayerTimeGUI()
+    gui.run()
 
 if __name__ == '__main__':
     main()
