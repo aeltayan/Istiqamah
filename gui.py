@@ -23,6 +23,20 @@ class TopFrame(ttk.Frame):
         super().__init__(parent)
         self.place(x=0, y=0, relwidth=1, relheight=0.7)
         ttk.Label(self, background='green').pack(expand = True, fill = 'both')
+        ClockFrame(self)
+        DateFrame(self)
+
+class ClockFrame(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.place(x=0, rely = 0.1, relwidth = 1, relheight = 1)
+        ttk.Label(self, background="purple").pack(expand = True, fill = 'both')
+
+class DateFrame(ttk.Frame):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.place(x=0, y=0, relwidth = 1, relheight = 0.1)
+        ttk.Label(self, background='teal').pack(expand = True, fill = 'both')
 
 class BottomFrame(ttk.Frame):
     def __init__(self, parent):
@@ -35,7 +49,7 @@ class BottomFrame(ttk.Frame):
 class PrayerTimeFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.place(x=0, y=0, relwidth=1, relheight=0.8)
+        self.place(x=0, y=0, relwidth=1, relheight=0.9)
 
         PrayerTimeEntry(self, 'blue')
         PrayerTimeEntry(self, 'yellow')
