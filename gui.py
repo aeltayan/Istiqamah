@@ -1,12 +1,15 @@
-import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as ttk
+import time
+from time import strftime
+from ttkbootstrap.constants import *
+from PIL import Image, ImageTk
 
-class PrayerTimeGUI(tk.Tk):
+class PrayerTimeGUI(ttk.Window):
 
     def __init__(self):
 
         # main window
-        super().__init__()
+        super().__init__(themename='darkly')
         self.attributes('-fullscreen', True)
         self.bind('<Escape>', lambda event: self.quit())
 
@@ -15,67 +18,58 @@ class PrayerTimeGUI(tk.Tk):
         self.main_bottom_frame = BottomFrame(self)
 
     def run(self):
-
         self.mainloop()
 
 class TopFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.place(x=0, y=0, relwidth=1, relheight=0.7)
-        ttk.Label(self, background='green').pack(expand = True, fill = 'both')
-        ClockFrame(self)
-        DateFrame(self)
+        self.place(x=0,y=0, relheight=0.7, relwidth=1)
+        self.create_clock()
 
-class ClockFrame(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.place(x=0, rely = 0.1, relwidth = 1, relheight = 1)
-        ttk.Label(self, background="purple").pack(expand = True, fill = 'both')
 
-class DateFrame(ttk.Frame):
-    def __init__(self,parent):
-        super().__init__(parent)
-        self.place(x=0, y=0, relwidth = 1, relheight = 0.1)
-        ttk.Label(self, background='teal').pack(expand = True, fill = 'both')
+    def create_clock(self):
+        # Title label
+        label = ttk.Label(self, text='Muslim Student Association', font=('Segoe UI', 40, 'bold'), anchor='center', style='success')
+
+        # Frame for clock display
+        clock_frame = ttk.LabelFrame(self, labelwidget=label, padding=20, style='success')
+
+        # Live clock display
+        live_clock = ttk.Label(
+            clock_frame,
+            font=('Segoe UI', 200, 'bold'),
+            style='success',
+            anchor='center'
+        )
+
+        # Pack the live clock with padding
+        live_clock.pack(expand=True, fill='both', padx=20, pady=20)
+
+        # Pack the clock frame with padding
+        clock_frame.pack(expand=True, fill='both', padx=30, pady=30)
+
+        def digitalclock():
+
+            current_time = time.strftime("%I:%M%p")
+
+            if current_time[0] == '0':
+                current_time = current_time[1:]
+
+            live_clock.config(text=current_time)
+            label.after(1000, digitalclock)
+
+        digitalclock()
+
+
 
 class BottomFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.place(x=0, rely=0.7, relwidth=1, relheight=0.3)
-
-        PrayerTimeFrame(self)
-        JummahTimeFrame(self)
-
-class PrayerTimeFrame(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.place(x=0, y=0, relwidth=1, relheight=0.9)
-
-        PrayerTimeEntry(self, 'blue')
-        PrayerTimeEntry(self, 'yellow')
-        PrayerTimeEntry(self, 'blue')
-        PrayerTimeEntry(self, 'yellow')
-        PrayerTimeEntry(self, 'blue')
+        self.place(x=0, rely=0.7, relheight=0.3, relwidth=1)
 
 
-class JummahTimeFrame(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.place(x=0, rely=0.8, relwidth=1, relheight=0.2)
-        JummahTimeEntry(self)
 
 
-class PrayerTimeEntry(ttk.Frame):
-    def __init__(self, parent, background):
-        super().__init__(parent)
-        ttk.Label(self, background=background).pack(expand = True, fill = 'both')
-        self.pack(side='left', expand = True, fill = 'both')
-
-class JummahTimeEntry(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        ttk.Label(self, background='orange').pack(expand = True, fill = 'both')
-        self.pack(side='bottom', expand = True, fill = 'both')
 
 
 
