@@ -9,9 +9,10 @@ class PrayerTimeGUI(ttk.Window):
     def __init__(self):
 
         # main window
-        super().__init__(themename='darkly')
+        super().__init__(themename='litera')
         self.attributes('-fullscreen', True)
         self.bind('<Escape>', lambda event: self.quit())
+        self.configure(bg='black')
 
         # Frames
         self.main_top_frame = TopFrame(self)
@@ -93,51 +94,55 @@ class BottomFrame(ttk.Frame):
             ttk.Separator(parent, style='success', orient='vertical').pack(side='left', expand = True, fill = 'y', pady = 40)
 
 
+        current_prayer_times = self.get_prayer_times()
+
+
         main_frame = ttk.Frame(self, style='success')
         prayer_times_frame = ttk.Frame(main_frame)
 
+
         # Fajr
-        PrayerTimeEntry(prayer_times_frame)
+        PrayerTimeEntry(prayer_times_frame, 'Fajr', current_prayer_times['Fajr'])
         seperator(prayer_times_frame)
 
         # Dhuhr
-        PrayerTimeEntry(prayer_times_frame)
+        PrayerTimeEntry(prayer_times_frame, 'Dhuhr', current_prayer_times['Dhuhr'])
         seperator(prayer_times_frame)
 
         # Asr
-        PrayerTimeEntry(prayer_times_frame)
+        PrayerTimeEntry(prayer_times_frame, 'Asr', current_prayer_times['Asr'])
         seperator(prayer_times_frame)
 
         # Maghrib
-        PrayerTimeEntry(prayer_times_frame)
+        PrayerTimeEntry(prayer_times_frame, 'Maghrib', current_prayer_times['Magrib'])
         seperator(prayer_times_frame)
 
         # Isha
-        PrayerTimeEntry(prayer_times_frame)
-        seperator(prayer_times_frame)
+        PrayerTimeEntry(prayer_times_frame, 'Isha', current_prayer_times['Isha'])
 
 
 
         main_frame.pack(expand = True, fill = 'both', padx = 30, pady = 30)
         prayer_times_frame.pack(expand = True, fill = 'both', padx = 10, pady= 10)
 
-        def get_prayer_times():
+    def get_prayer_times(self):
 
-            current_month = datetime.now().strftime('%B')
-            current_day = datetime.now().strftime('%d')
+        current_month = datetime.now().strftime('%B')
+        current_day = datetime.now().strftime('%d')
 
-            current_prayer_times = self.prayer_times[current_month][int(current_day)]
+        return self.prayer_times[current_month][int(current_day)]
 
+    def update_prayer_times(self):
 
-
-
-
+        self.after(1000, self.get_prayer_times())
 
 
 class PrayerTimeEntry(ttk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, prayer_name, prayer_time):
         super().__init__(parent, style='success')
         self.pack(side = 'left', expand = True, fill = 'both')
+        ttk.Label(self, text=prayer_name, font=('Times New Roman', 40, 'italic', 'bold'), anchor='center', style='success').pack(expand = True, fill = 'both')
+        ttk.Label(self, text = prayer_time, font=('Times New Roman', 40), anchor='center', style='success').pack(expand = True, fill = 'both')
 
 
 
