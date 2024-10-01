@@ -6,7 +6,6 @@ from hijri_converter import convert
 from prayer_times import read_prayer_times
 
 class PrayerTimeGUI(ttk.Window):
-
     def __init__(self):
 
         # main window
@@ -18,8 +17,6 @@ class PrayerTimeGUI(ttk.Window):
         self.main_top_frame = TopFrame(self)
         self.main_bottom_frame = BottomFrame(self)
 
-
-
     def run(self):
         self.mainloop()
 
@@ -27,7 +24,6 @@ class TopFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0,y=0, relheight=0.7, relwidth=1)
-        self.prayer_times = read_prayer_times('prayertimes.csv')
         self.clock_widget()
 
 
@@ -40,25 +36,13 @@ class TopFrame(ttk.Frame):
 
         # Title label
         label = ttk.Label(clock_frame,
-                          text='Muslim Student Association',
+                          text='Muslim Student Association\n           Prayer Times',
                           font=('Times New Roman', 45, 'italic'),
                           style='inverted-success',
                           anchor='s')
 
         # Live clock
         live_clock = ttk.Label(clock_frame, font=('Times New Roman', 200, 'bold'), style ='success', anchor = 'center')
-
-        # date frame
-        next_prayer_frame =  ttk.LabelFrame(data_frame, style = 'success')
-
-        next_prayer_label = ttk.Label(next_prayer_frame, text='Next Prayer is in...',
-                                font=('Helvetica', 30, 'bold'),
-                                foreground='White',
-                                anchor='n')
-
-        next_prayer = ttk.Label(next_prayer_frame)
-
-
 
         date = ttk.Label(clock_frame, font=('Helvetica', 20, 'bold', 'italic'), anchor='n', style = 'success')
 
@@ -68,10 +52,7 @@ class TopFrame(ttk.Frame):
         live_clock.pack(expand=True, fill = 'x',)
         date.pack(expand = True, fill = 'x', padx= 10)
         clock_frame.pack(side = 'left', expand = True, fill = 'both')
-        data_frame.pack(expand = True, fill = 'both', padx= 30, pady=30)
-        # next_prayer_frame.pack(side = 'right' ,expand = True, fill = 'both', padx = 50, pady = 30)
-        # next_prayer_label.pack(expand=True, fill='both', padx = 30, pady= 10)
-        # next_prayer.pack(expand = True, fill = 'both')
+        data_frame.pack(expand = True, fill = 'both', padx= 10, pady=10)
         main_frame.pack(expand = True, fill = 'both', padx = 30, pady = 30)
 
         def digitalclock():
@@ -99,12 +80,69 @@ class TopFrame(ttk.Frame):
         digitalclock()
         live_date()
 
-
-
 class BottomFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0, rely=0.7, relheight=0.3, relwidth=1)
+        self.prayer_times = read_prayer_times('prayertimes.csv')
+        self.create_widgets()
+
+    def create_widgets(self):
+        def seperator(parent):
+
+            ttk.Separator(parent, style='success', orient='vertical').pack(side='left', expand = True, fill = 'y', pady = 40)
+
+
+        main_frame = ttk.Frame(self, style='success')
+        prayer_times_frame = ttk.Frame(main_frame)
+
+        # Fajr
+        PrayerTimeEntry(prayer_times_frame)
+        seperator(prayer_times_frame)
+
+        # Dhuhr
+        PrayerTimeEntry(prayer_times_frame)
+        seperator(prayer_times_frame)
+
+        # Asr
+        PrayerTimeEntry(prayer_times_frame)
+        seperator(prayer_times_frame)
+
+        # Maghrib
+        PrayerTimeEntry(prayer_times_frame)
+        seperator(prayer_times_frame)
+
+        # Isha
+        PrayerTimeEntry(prayer_times_frame)
+        seperator(prayer_times_frame)
+
+
+
+        main_frame.pack(expand = True, fill = 'both', padx = 30, pady = 30)
+        prayer_times_frame.pack(expand = True, fill = 'both', padx = 10, pady= 10)
+
+        def get_prayer_times():
+
+            current_month = datetime.now().strftime('%B')
+            current_day = datetime.now().strftime('%d')
+
+            current_prayer_times = self.prayer_times[current_month][int(current_day)]
+
+
+
+
+
+
+
+class PrayerTimeEntry(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, style='success')
+        self.pack(side = 'left', expand = True, fill = 'both')
+
+
+
+
+
 
 
 
