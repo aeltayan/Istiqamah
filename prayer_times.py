@@ -56,5 +56,3 @@ def next_prayer_time(prayer_times:dict):
         prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day=int(current_day) + 1)
 
         return prayer, prayer_time, prayer_time - current_time
-
-

@@ -9,7 +9,6 @@ class PrayerTimeGUI(ttk.Window):
         super().__init__(themename='darkly')
         self.attributes('-fullscreen', True)
         self.bind('<Escape>', lambda event: self.quit())
-        self.configure(bg='black')
 
         # Frames
         self.main_top_frame = TopFrame(self)
@@ -25,6 +24,7 @@ class TopFrame(ttk.Frame):
         self.place(x=0,y=0, relheight=0.7, relwidth=1)
         self.updater = DynamicUpdater()
         self.create_widget()
+
 
     def create_widget(self):
 
@@ -51,6 +51,7 @@ class TopFrame(ttk.Frame):
             clock_frame.pack(side = 'left', expand = True, fill = 'both')
             data_frame.pack(expand = True, fill = 'both', padx= 15, pady=15)
             main_frame.pack(expand = True, fill = 'both', padx = 30, pady = 30)
+
 
 
         pack_widgets()
@@ -109,7 +110,7 @@ class PrayerTimeEntry(ttk.Frame):
         super().__init__(parent, style='light')
         self.pack(side='left', expand=True, fill='both')
 
-        text_color = 'white'
+        text_color = '#FFE500'
 
         self.prayer_name_label = ttk.Label(self, text=prayer_name, font=('Times New Roman', 40, 'bold'), anchor='center', foreground=text_color)
         self.prayer_name_label.pack(expand=True, fill='both')
