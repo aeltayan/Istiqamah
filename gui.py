@@ -1,9 +1,6 @@
 import ttkbootstrap as ttk
-import time
-import datetime
-from datetime import datetime, timedelta
-from hijri_converter import convert
-from prayer_times import read_prayer_times
+from dynamic_updater import DynamicUpdater
+from prayer_times import read_prayer_times, next_prayer_time
 
 class PrayerTimeGUI(ttk.Window):
     def __init__(self):
@@ -26,6 +23,7 @@ class TopFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0,y=0, relheight=0.7, relwidth=1)
+        self.updater = DynamicUpdater()
         self.create_widget()
 
     def create_widget(self):
@@ -37,20 +35,12 @@ class TopFrame(ttk.Frame):
 
         clock_frame = ttk.Frame(data_frame)
 
-        # Title label
-        title_label = ttk.Label(clock_frame,
-                          text='Muslim Student Association',
-                          font=('Times New Roman', 45, 'italic'),
-                          foreground='#008028',
-                          anchor='s')
+        title_label = ttk.Label(clock_frame, text='Muslim Student Association',font=('Times New Roman', 45, 'italic'),
+                                foreground='#008028', anchor='s')
 
-        # Live clock
         live_clock = ttk.Label(clock_frame, font=('Times New Roman', 200, 'bold'), foreground= '#FFE500', anchor = 'center')
 
         date = ttk.Label(clock_frame, font=('Helvetica', 20, 'bold', 'italic'), anchor='n', foreground='#008028')
-
-
-        # Pack the live clock with padding
 
         def pack_widgets():
 
@@ -62,36 +52,17 @@ class TopFrame(ttk.Frame):
             data_frame.pack(expand = True, fill = 'both', padx= 15, pady=15)
             main_frame.pack(expand = True, fill = 'both', padx = 30, pady = 30)
 
-        def digitalclock():
-
-            current_time = time.strftime("%I:%M%p")
-
-            if current_time[0] == '0':
-                current_time = current_time[1:]
-
-            live_clock.config(text=current_time)
-            live_clock.after(1000, digitalclock)
-
-        def live_date():
-
-            current_date = datetime.now().strftime("%A, %B %d, %Y")
-
-            hijri_date_obj = convert.Gregorian(datetime.now().year, datetime.now().month, datetime.now().day).to_hijri()
-            hijri_date_str = f"{hijri_date_obj.day} {hijri_date_obj.month_name()} {hijri_date_obj.year} AH"
-
-            date.config(text=f'{current_date} - {hijri_date_str}')
-
-            date.after(1000, live_date)
 
         pack_widgets()
-        digitalclock()
-        live_date()
+        self.updater.update_clock(live_clock)
+        self.updater.update_date(date)
 
 class BottomFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0, rely=0.7, relheight=0.3, relwidth=1)
         self.prayer_times = read_prayer_times('prayertimes.csv')
+        self.updater = DynamicUpdater()
         self.create_widgets()
 
     def create_widgets(self):
@@ -102,26 +73,27 @@ class BottomFrame(ttk.Frame):
         background_label = ttk.Label(main_frame, background='#008028')
         prayer_times_frame = ttk.Frame(main_frame)
 
-        # Fajr
         fajr = PrayerTimeEntry(prayer_times_frame, 'Fajr', "0")
         separator(prayer_times_frame)
 
-
-        # Dhuhr
         dhuhr = PrayerTimeEntry(prayer_times_frame, 'Dhuhr',"0")
         separator(prayer_times_frame)
 
-        # Asr
         asr = PrayerTimeEntry(prayer_times_frame, 'Asr', "0")
         separator(prayer_times_frame)
 
-        # Maghrib
         maghrib = PrayerTimeEntry(prayer_times_frame, 'Maghrib', "0")
         separator(prayer_times_frame)
 
-        # Isha
         isha = PrayerTimeEntry(prayer_times_frame, 'Isha', "0")
 
+        prayer_widgets = {
+            'Fajr': fajr,
+            'Dhuhr': dhuhr,
+            'Asr': asr,
+            'Maghrib': maghrib,
+            'Isha': isha
+        }
 
         def pack_widgets():
 
@@ -129,51 +101,8 @@ class BottomFrame(ttk.Frame):
             main_frame.pack(expand=True, fill='both', padx=30, pady=30)
             prayer_times_frame.pack(expand=True, fill='both', padx=10, pady=10)
 
-        def update_prayer_times():
-
-            current_month = datetime.now().strftime('%B')
-            current_day = datetime.now().strftime('%d')
-
-            prayer_times = self.prayer_times[current_month][int(current_day)]
-
-            fajr.update_time(prayer_times['Fajr'])
-            dhuhr.update_time(prayer_times['Dhuhr'])
-            asr.update_time(prayer_times['Asr'])
-            maghrib.update_time(prayer_times['Magrib'])
-            isha.update_time(prayer_times['Isha'])
-
-            self.after(1000, update_prayer_times)
-
-        def next_prayer_time():
-
-            current_month = datetime.now().strftime('%B')
-            current_day = datetime.now().strftime('%d')
-            current_time = datetime.now()
-
-            today_prayer_times = self.prayer_times[current_month][int(current_day)]
-            tomorrow_prayer_times = self.prayer_times[current_month][int(current_day) + 1]
-
-            time_format = "%I:%M %p"
-
-            for prayer, prayer_time in today_prayer_times.items():
-
-                prayer_time = datetime.strptime(prayer_time, time_format)
-
-                prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day=current_time.day)
-
-                if prayer_time > current_time:
-                    return prayer, prayer_time, prayer_time - current_time
-
-            for prayer, prayer_time_str in tomorrow_prayer_times.items():
-
-                prayer_time = datetime.strptime(prayer_time_str, time_format)
-                prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day= int(current_day) + 1)
-
-                return prayer, prayer_time, prayer_time - current_time
-
         pack_widgets()
-        next_prayer_time()
-        update_prayer_times()
+        self.updater.update_prayer_times(self, self.prayer_times, prayer_widgets)
 
 class PrayerTimeEntry(ttk.Frame):
     def __init__(self, parent, prayer_name, prayer_time):

@@ -1,4 +1,6 @@
 import csv
+import datetime
+from datetime import datetime
 
 def read_prayer_times(filename: str):
 
@@ -27,3 +29,32 @@ def read_prayer_times(filename: str):
                 }
 
     return prayer_times
+
+
+def next_prayer_time(prayer_times:dict):
+
+    current_month = datetime.now().strftime('%B')
+    current_day = datetime.now().strftime('%d')
+    current_time = datetime.now()
+
+    today_prayer_times = prayer_times[current_month][int(current_day)]
+    tomorrow_prayer_times = prayer_times[current_month][int(current_day) + 1]
+
+    time_format = "%I:%M %p"
+
+    for prayer, prayer_time in today_prayer_times.items():
+
+        prayer_time = datetime.strptime(prayer_time, time_format)
+
+        prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day=current_time.day)
+
+        if prayer_time > current_time:
+            return prayer, prayer_time, prayer_time - current_time
+
+    for prayer, prayer_time_str in tomorrow_prayer_times.items():
+        prayer_time = datetime.strptime(prayer_time_str, time_format)
+        prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day=int(current_day) + 1)
+
+        return prayer, prayer_time, prayer_time - current_time
+
+
