@@ -49,10 +49,16 @@ def next_prayer_time(prayer_times:dict):
         prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day=current_time.day)
 
         if prayer_time > current_time:
-            return prayer, prayer_time, prayer_time - current_time
+
+            time_difference = (prayer_time - current_time).total_seconds()
+
+            return prayer, time_difference
 
     for prayer, prayer_time_str in tomorrow_prayer_times.items():
+
         prayer_time = datetime.strptime(prayer_time_str, time_format)
         prayer_time = prayer_time.replace(year=current_time.year, month=current_time.month, day=int(current_day) + 1)
 
-        return prayer, prayer_time, prayer_time - current_time
+        time_difference = (prayer_time - current_time).total_seconds()
+
+        return prayer, time_difference

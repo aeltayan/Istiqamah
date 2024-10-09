@@ -22,6 +22,7 @@ class TopFrame(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0,y=0, relheight=0.7, relwidth=1)
+        self.prayer_times = read_prayer_times('prayertimes.csv')
         self.updater = DynamicUpdater()
         self.create_widget()
 
@@ -40,6 +41,8 @@ class TopFrame(ttk.Frame):
 
         live_clock = ttk.Label(clock_frame, font=('Times New Roman', 200, 'bold'), foreground= '#FFE500', anchor = 'center')
 
+        countdown = ttk.Label(clock_frame, font = ("Times New Roman", 50, 'bold'), foreground= '#FFE500', anchor = 'center')
+
         date = ttk.Label(clock_frame, font=('Helvetica', 20, 'bold', 'italic'), anchor='n', foreground='#008028')
 
         def pack_widgets():
@@ -47,6 +50,7 @@ class TopFrame(ttk.Frame):
             background_label.place(x=0, y=0, relwidth=1, relheight=1)
             title_label.pack(expand = True, padx =10)
             live_clock.pack(expand=True, fill = 'x',)
+            countdown.pack(expand = True, fill = 'x')
             date.pack(expand = True, fill = 'x', padx= 10)
             clock_frame.pack(side = 'left', expand = True, fill = 'both')
             data_frame.pack(expand = True, fill = 'both', padx= 15, pady=15)
@@ -57,6 +61,7 @@ class TopFrame(ttk.Frame):
         pack_widgets()
         self.updater.update_clock(live_clock)
         self.updater.update_date(date)
+        self.updater.countdown(countdown, next_prayer_time(self.prayer_times)[1], next_prayer_time(self.prayer_times)[0])
 
 class BottomFrame(ttk.Frame):
     def __init__(self, parent):
