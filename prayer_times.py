@@ -24,7 +24,7 @@ def read_prayer_times(filename: str):
                     'Sunrise': row[3],
                     'Dhuhr': row[4],
                     'Asr': row[5],
-                    'Magrib': row[6],
+                    'Maghrib': row[6],
                     'Isha': row[7]
                 }
 
