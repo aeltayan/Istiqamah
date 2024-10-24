@@ -50,6 +50,10 @@ class DynamicUpdater:
         hours, remainder = divmod(time_difference, 3600)
         minutes, seconds = divmod(remainder, 60)
 
+        if next_prayer == 'Magrib':
+
+            next_prayer = 'Maghrib'
+
         countdown_str = f"{next_prayer} in:{int(hours):2}:{int(minutes):02}:{int(seconds):02}"
 
         countdown_label.config(text = countdown_str)
