@@ -48,16 +48,16 @@ class TopFrame(ttk.Frame):
         date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground='#008028', anchor='e')
         hijri_date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground='#008028')
 
-        live_clock = ttk.Label(clock_frame, font=('Times New Roman', 200, 'bold'), foreground='#FFE500', anchor='n')
-        countdown = ttk.Label(clock_frame, font=("Times New Roman", 50, 'bold'), foreground='#FFE500', anchor='n')
+        live_clock = ttk.Label(clock_frame, font=('Times New Roman', 40, 'bold'), foreground='#FFE500', anchor='n')
+        countdown = ttk.Label(clock_frame, font=("Times New Roman", 100, 'bold'), foreground='#FFE500', anchor='n')
 
         def pack_widgets():
             background_label.place(x=0, y=0, relwidth=1, relheight=1)
             date.pack(side='left', expand=True, fill='x')
             title_label.pack(side='left', expand=True, fill='x', padx=200)
             hijri_date.pack(side='left', expand=True, fill='x')
-            live_clock.pack(expand=True, fill='both')
             countdown.pack(expand=True, fill='both')
+            live_clock.pack(expand=True, fill='both')
             title_frame.pack(expand=True, fill='x')
             clock_frame.pack(expand=True, fill='both')
             data_frame.pack(expand=True, fill='both', padx=15, pady=15)
