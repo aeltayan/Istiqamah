@@ -1,1 +1,3 @@
-### TTKBOOTSTRAP GUI that dynamically displays prayer times:![Screenshot 2024-10-04 235908.png](..%2F..%2FOneDrive%2FPictures%2FScreenshots%2FScreenshot%202024-10-04%20235908.png)**_
+### TTKBOOTSTRAP GUI that dynamically displays prayer times:
+
+![image](https://github.com/user-attachments/assets/dd699772-6cd8-4131-afea-89a44f3dee9a)
