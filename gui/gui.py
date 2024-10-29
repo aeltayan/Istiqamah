@@ -1,15 +1,20 @@
-import ttkbootstrap as ttk
-from dynamic_updater import DynamicUpdater
-from prayer_times import read_prayer_times, next_prayer_time
-
+import tkinter as tk
 import ttkbootstrap as ttk
 from prayer_times import read_prayer_times
 from dynamic_updater import DynamicUpdater
 
-class PrayerTimeGUI(ttk.Window):
+from PIL import Image, ImageTk
+
+GREEN = "#3E7D5D"
+GOLD  = "#D4AF37"
+WHITE = "#F5F5F5"
+DGRAY = "#141414"
+LGRAY = "#A9A9A9"
+
+class PrayerTimeGUI(ttk.Toplevel):
     def __init__(self):
         # Main window
-        super().__init__(themename='darkly')
+        super().__init__()
         self.attributes('-fullscreen', True)
         self.bind('<Escape>', lambda event: self.quit())
 
@@ -26,30 +31,35 @@ class PrayerTimeGUI(ttk.Window):
     def run(self):
         self.mainloop()
         
-import ttkbootstrap as ttk
-
 class TopFrame(ttk.Frame):
     def __init__(self, parent, updater):
         super().__init__(parent)
         self.updater = updater
         self.place(x=0, y=0, relheight=0.7, relwidth=1)
         self.create_widget()
+        s = ttk.Style()
+        s.configure('TFrame', background=DGRAY)
+        s.configure('TLabel', background=DGRAY)
 
     def create_widget(self):
         main_frame = ttk.Frame(self)
-        background_label = ttk.Label(main_frame, background='#008028')
+        background_label = ttk.Label(main_frame, background=GREEN)
 
         data_frame = ttk.Frame(main_frame)
         title_frame = ttk.Frame(data_frame)
         clock_frame = ttk.Frame(data_frame)
 
-        title_label = ttk.Label(title_frame, text='Muslim Student Association', font=('Times New Roman', 40, 'italic'),
-                                foreground='#008028', anchor='center')
-        date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground='#008028', anchor='e')
-        hijri_date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground='#008028')
+        logo = Image.open('msa.png')
+        logo = logo.resize((300, 150))  
+        self.logo = ImageTk.PhotoImage(logo)  
 
-        live_clock = ttk.Label(clock_frame, font=('Times New Roman', 40, 'bold'), foreground='#FFE500', anchor='n')
-        countdown = ttk.Label(clock_frame, font=("Times New Roman", 100, 'bold'), foreground='#FFE500', anchor='n')
+        title_label = ttk.Label(title_frame, image=self.logo, background=DGRAY, anchor='center')
+
+        date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground=GREEN, anchor='e')
+        hijri_date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground=GREEN)
+
+        live_clock = ttk.Label(clock_frame, font=('Times New Roman', 40, 'bold'), foreground=GOLD, anchor='n')
+        countdown = ttk.Label(clock_frame, font=("Times New Roman", 100, 'bold'), foreground=GOLD, anchor='n')
 
         def pack_widgets():
             background_label.place(x=0, y=0, relwidth=1, relheight=1)
@@ -69,35 +79,42 @@ class TopFrame(ttk.Frame):
         self.updater.countdown(countdown)
 
 
+
 class BottomFrame(ttk.Frame):
     def __init__(self, parent, updater):
         super().__init__(parent)
         self.updater = updater
         self.place(x=0, rely=0.7, relheight=0.3, relwidth=1)
         self.create_widgets()
+        s = ttk.Style()
+        s.configure('TFrame', background=DGRAY)
 
     def create_widgets(self):
-        def separator(parent):
-            ttk.Separator(parent, style='light', orient='vertical').pack(side='left', expand=True, fill='both', pady=35)
+        def add_separator(parent):
+            separator_frame = ttk.Frame(parent, width=2)
+            separator_frame.pack(side='left', fill='y', pady=20) 
+
+            separator = ttk.Separator(separator_frame, orient='vertical')
+            separator.pack(expand=True, fill='y') 
 
         main_frame = ttk.Frame(self)
-        background_label = ttk.Label(main_frame, background='#008028')
+        background_label = ttk.Label(main_frame, background=GREEN)
         prayer_times_frame = ttk.Frame(main_frame)
 
         fajr = PrayerTimeEntry(prayer_times_frame, 'Fajr', "0")
-        separator(prayer_times_frame)
+        add_separator(prayer_times_frame)
 
         sunrise = PrayerTimeEntry(prayer_times_frame, 'Sunrise', "0")
-        separator(prayer_times_frame)
+        add_separator(prayer_times_frame)
 
         dhuhr = PrayerTimeEntry(prayer_times_frame, 'Dhuhr', "0")
-        separator(prayer_times_frame)
+        add_separator(prayer_times_frame)
 
         asr = PrayerTimeEntry(prayer_times_frame, 'Asr', "0")
-        separator(prayer_times_frame)
+        add_separator(prayer_times_frame)
 
         maghrib = PrayerTimeEntry(prayer_times_frame, 'Maghrib', "0")
-        separator(prayer_times_frame)
+        add_separator(prayer_times_frame)
 
         isha = PrayerTimeEntry(prayer_times_frame, 'Isha', "0")
 
@@ -123,7 +140,7 @@ class PrayerTimeEntry(ttk.Frame):
         super().__init__(parent, style='light')
         self.pack(side='left', expand=True, fill='both')
 
-        text_color = '#FFE500'
+        text_color = GOLD
 
         self.prayer_name_label = ttk.Label(self, text=prayer_name, font=('Times New Roman', 40, 'bold'), anchor='center', foreground=text_color)
         self.prayer_name_label.pack(expand=True, fill='both')
@@ -132,22 +149,23 @@ class PrayerTimeEntry(ttk.Frame):
         self.prayer_time_label.pack(expand=True, fill='both')
 
         if prayer_name == 'Fajr':
-            ttk.Label(self, text="Iqamah: 7:00AM", font=('Times New Roman', 13, 'bold'), anchor='center',foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: 7:00AM", font=('Times New Roman', 13, 'bold'), anchor='center',foreground=LGRAY).pack(expand=True, fill='both')
 
         if prayer_name == 'Sunrise':
                 ttk.Label(self).pack(expand=True, fill='both')
 
         if prayer_name == 'Dhuhr':
-            ttk.Label(self, text="Iqamah: 2:00PM", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: 2:00PM", font=('Times New Roman', 13, 'bold'), anchor='center', foreground=LGRAY).pack(expand=True, fill='both')
 
         if prayer_name == 'Asr':
-            ttk.Label(self, text="Iqamah: Asr + 10 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Asr + 10 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground=LGRAY).pack(expand=True, fill='both')
 
         if prayer_name == 'Maghrib':
-            ttk.Label(self, text="Iqamah: Maghrib + 5 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Maghrib + 5 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground=LGRAY).pack(expand=True, fill='both')
 
         if prayer_name == 'Isha':
-            ttk.Label(self, text="Iqamah: Isha + 10 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Isha + 10 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground=LGRAY).pack(expand=True, fill='both')
+
 
     def update_time(self, new_prayer_time):
         self.prayer_time_label.config(text=new_prayer_time)
