@@ -5,7 +5,8 @@ from dynamic_updater import DynamicUpdater
 
 from PIL import Image, ImageTk
 
-GREEN = "#3E7D5D"
+# GREEN = "#3E7D5D"
+GREEN = "#127958"
 GOLD  = "#D4AF37"
 WHITE = "#F5F5F5"
 DGRAY = "#141414"
