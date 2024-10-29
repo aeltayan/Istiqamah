@@ -16,30 +16,30 @@ class DynamicUpdater:
             'Maghrib': {'offset_minutes': 5},
             'Isha': {'offset_minutes': 10},
         }
-        self.duaas = self.load_duaas('duaas.txt')
-        self.duaa_index = 0
-        self.duaa_screen_active = False
+        # self.duaas = self.load_duaas('duaas.txt')
+        # self.duaa_index = 0
+        # self.duaa_screen_active = False
         self.today_iqamah_times = {}
         self.compute_iqamah_times()
         self.check_iqamah_times()
 
-    def load_duaas(self, filename):
-        with open(filename, 'r', encoding='utf-8') as f:
-            content = f.read()
-            duaa_sections = content.strip().split('---')
-            duaas = []
-            for section in duaa_sections:
-                parts = section.strip().split('||')
-                if len(parts) == 3:
-                    arabic_text = parts[0].strip()
-                    transliterated_text = parts[1].strip()
-                    english_text = parts[2].strip()
-                    duaas.append({
-                        'arabic': arabic_text,
-                        'transliteration': transliterated_text,
-                        'english': english_text
-                    })
-            return duaas
+    # def load_duaas(self, filename):
+    #     with open(filename, 'r', encoding='utf-8') as f:
+    #         content = f.read()
+    #         duaa_sections = content.strip().split('---')
+    #         duaas = []
+    #         for section in duaa_sections:
+    #             parts = section.strip().split('||')
+    #             if len(parts) == 3:
+    #                 arabic_text = parts[0].strip()
+    #                 transliterated_text = parts[1].strip()
+    #                 english_text = parts[2].strip()
+    #                 duaas.append({
+    #                     'arabic': arabic_text,
+    #                     'transliteration': transliterated_text,
+    #                     'english': english_text
+    #                 })
+    #         return duaas
 
     def update_clock(self, live_clock):
         current_time = time.strftime("%I:%M %p")
@@ -166,72 +166,72 @@ class DynamicUpdater:
         # Schedule the next check
         self.root.after(1000, self.check_iqamah_times)
 
-    def show_duaa_screen(self):
-        if self.duaa_screen_active:
-            return  # Already showing
-        self.duaa_screen_active = True
-        self.duaa_overlay = tk.Frame(self.root, bg='#ADD8E6')  # Light blue background
-        self.duaa_overlay.place(x=0, y=0, relwidth=1, relheight=1)
-
-        # Arabic text label
-        self.arabic_label = tk.Label(
-            self.duaa_overlay,
-            text='',
-            font=('Traditional Arabic', 50, 'bold'),
-            fg='#000000',
-            bg='#ADD8E6',
-            wraplength=self.root.winfo_screenwidth() - 100,
-            justify='center'
-        )
-        self.arabic_label.pack(expand=True, fill='both', pady=(30, 10))
-
-        # Transliteration text label
-        self.transliteration_label = tk.Label(
-            self.duaa_overlay,
-            text='',
-            font=('Times New Roman', 40, 'italic'),
-            fg='#000000',
-            bg='#ADD8E6',
-            wraplength=self.root.winfo_screenwidth() - 100,
-            justify='center'
-        )
-        self.transliteration_label.pack(expand=True, fill='both', pady=(10, 10))
-
-        # English text label
-        self.english_label = tk.Label(
-            self.duaa_overlay,
-            text='',
-            font=('Times New Roman', 30),
-            fg='#000000',
-            bg='#ADD8E6',
-            wraplength=self.root.winfo_screenwidth() - 100,
-            justify='center'
-        )
-        self.english_label.pack(expand=True, fill='both', pady=(10, 30))
-
-        # Start displaying duaas
-        self.display_next_duaa()
-
-        # Schedule removal of duaa screen after 5 minutes
-        self.root.after(5 * 60 * 1000, self.hide_duaa_screen)
-
-    def display_next_duaa(self):
-        if not self.duaa_screen_active:
-            return
-        duaa = self.duaas[self.duaa_index]
-        arabic_text = duaa['arabic']
-        transliteration = duaa['transliteration']
-        english_text = duaa['english']
-
-        # Update labels for Arabic, Transliteration, and English texts
-        self.arabic_label.config(text=arabic_text)
-        self.transliteration_label.config(text=transliteration)
-        self.english_label.config(text=english_text)
-
-        self.duaa_index = (self.duaa_index + 1) % len(self.duaas)
-        # Change duaa every 20 seconds (adjust as needed)
-        self.root.after(20000, self.display_next_duaa)
-
-    def hide_duaa_screen(self):
-        self.duaa_overlay.destroy()
-        self.duaa_screen_active = False
+    # def show_duaa_screen(self):
+    #     if self.duaa_screen_active:
+    #         return  # Already showing
+    #     self.duaa_screen_active = True
+    #     self.duaa_overlay = tk.Frame(self.root, bg='#ADD8E6')  # Light blue background
+    #     self.duaa_overlay.place(x=0, y=0, relwidth=1, relheight=1)
+    #
+    #     # Arabic text label
+    #     self.arabic_label = tk.Label(
+    #         self.duaa_overlay,
+    #         text='',
+    #         font=('Traditional Arabic', 50, 'bold'),
+    #         fg='#000000',
+    #         bg='#ADD8E6',
+    #         wraplength=self.root.winfo_screenwidth() - 100,
+    #         justify='center'
+    #     )
+    #     self.arabic_label.pack(expand=True, fill='both', pady=(30, 10))
+    #
+    #     # Transliteration text label
+    #     self.transliteration_label = tk.Label(
+    #         self.duaa_overlay,
+    #         text='',
+    #         font=('Times New Roman', 40, 'italic'),
+    #         fg='#000000',
+    #         bg='#ADD8E6',
+    #         wraplength=self.root.winfo_screenwidth() - 100,
+    #         justify='center'
+    #     )
+    #     self.transliteration_label.pack(expand=True, fill='both', pady=(10, 10))
+    #
+    #     # English text label
+    #     self.english_label = tk.Label(
+    #         self.duaa_overlay,
+    #         text='',
+    #         font=('Times New Roman', 30),
+    #         fg='#000000',
+    #         bg='#ADD8E6',
+    #         wraplength=self.root.winfo_screenwidth() - 100,
+    #         justify='center'
+    #     )
+    #     self.english_label.pack(expand=True, fill='both', pady=(10, 30))
+    #
+    #     # Start displaying duaas
+    #     self.display_next_duaa()
+    #
+    #     # Schedule removal of duaa screen after 5 minutes
+    #     self.root.after(5 * 60 * 1000, self.hide_duaa_screen)
+    #
+    # def display_next_duaa(self):
+    #     if not self.duaa_screen_active:
+    #         return
+    #     duaa = self.duaas[self.duaa_index]
+    #     arabic_text = duaa['arabic']
+    #     transliteration = duaa['transliteration']
+    #     english_text = duaa['english']
+    #
+    #     # Update labels for Arabic, Transliteration, and English texts
+    #     self.arabic_label.config(text=arabic_text)
+    #     self.transliteration_label.config(text=transliteration)
+    #     self.english_label.config(text=english_text)
+    #
+    #     self.duaa_index = (self.duaa_index + 1) % len(self.duaas)
+    #     # Change duaa every 20 seconds (adjust as needed)
+    #     self.root.after(20000, self.display_next_duaa)
+    #
+    # def hide_duaa_screen(self):
+    #     self.duaa_overlay.destroy()
+    #     self.duaa_screen_active = False

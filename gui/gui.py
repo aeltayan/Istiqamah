@@ -43,25 +43,25 @@ class TopFrame(ttk.Frame):
         title_frame = ttk.Frame(data_frame)
         clock_frame = ttk.Frame(data_frame)
 
-        title_label = ttk.Label(title_frame, text='Muslim Student Association', font=('Times New Roman', 40, 'italic'),
+        title_label = ttk.Label(title_frame, text='Muslim Student Association', font=('Times New Roman', 50, 'italic'),
                                 foreground='#008028', anchor='center')
         date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground='#008028', anchor='e')
         hijri_date = ttk.Label(title_frame, font=('Helvetica', 15, 'bold', 'italic'), foreground='#008028')
 
         live_clock = ttk.Label(clock_frame, font=('Times New Roman', 40, 'bold'), foreground='#FFE500', anchor='n')
-        countdown = ttk.Label(clock_frame, font=("Times New Roman", 100, 'bold'), foreground='#FFE500', anchor='n')
+        countdown = ttk.Label(clock_frame, font=("Times New Roman", 115, 'bold'), foreground='#FFE500', anchor='n')
 
         def pack_widgets():
             background_label.place(x=0, y=0, relwidth=1, relheight=1)
             date.pack(side='left', expand=True, fill='x')
-            title_label.pack(side='left', expand=True, fill='x', padx=200)
+            title_label.pack(side='left', expand=True, fill='x', padx=140)
             hijri_date.pack(side='left', expand=True, fill='x')
             countdown.pack(expand=True, fill='both')
             live_clock.pack(expand=True, fill='both')
-            title_frame.pack(expand=True, fill='x')
-            clock_frame.pack(expand=True, fill='both')
-            data_frame.pack(expand=True, fill='both', padx=15, pady=15)
-            main_frame.pack(expand=True, fill='both', padx=30, pady=30)
+            title_frame.place(rely = 0, relx=0, relwidth = 1, relheight = 0.25)
+            clock_frame.place(rely = 0.35, relwidth = 1, relheight = 0.8)
+            data_frame.pack(expand=True, fill='both', padx=10, pady=10)
+            main_frame.pack(expand=True, fill='both', padx=10, pady=10)
 
         pack_widgets()
         self.updater.update_clock(live_clock)
@@ -112,7 +112,7 @@ class BottomFrame(ttk.Frame):
 
         def pack_widgets():
             background_label.place(x=0, y=0, relwidth=1, relheight=1)
-            main_frame.pack(expand=True, fill='both', padx=30, pady=30)
+            main_frame.pack(expand=True, fill='both', padx=10, pady=10)
             prayer_times_frame.pack(expand=True, fill='both', padx=10, pady=10)
 
         pack_widgets()
@@ -141,7 +141,7 @@ class PrayerTimeEntry(ttk.Frame):
             ttk.Label(self, text="Iqamah: 2:00PM", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
 
         if prayer_name == 'Asr':
-            ttk.Label(self, text="Iqamah: Asr + 10 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Asr + 5 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
 
         if prayer_name == 'Maghrib':
             ttk.Label(self, text="Iqamah: Maghrib + 5 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
