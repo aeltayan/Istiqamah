@@ -37,7 +37,7 @@ class TopFrame(ttk.Frame):
         super().__init__(parent)
         self.updater = updater
         self.place(x=0, y=0, relheight=0.7, relwidth=1)
-        logo = Image.open('/home/msauofa/Dev/Istiqamah/Assets/msa.png')
+        logo = Image.open('/home/msauofa/Dev/Istiqamah/Assets/background.jpg')
         logo = logo.resize((240, 120))
         self.logo = ImageTk.PhotoImage(logo)
         self.create_widget()
@@ -53,7 +53,7 @@ class TopFrame(ttk.Frame):
         title_frame = ttk.Frame(data_frame)
         clock_frame = ttk.Frame(data_frame)
 
-        logo = Image.open('/home/msauofa/Dev/Istiqamah/Assets/msa.png')
+        logo = Image.open('/home/msauofa/Dev/Istiqamah/Assets/background.jpg')
         logo = logo.resize((240,120))  
         self.logo = ImageTk.PhotoImage(logo)  
 
