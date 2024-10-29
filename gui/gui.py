@@ -1,15 +1,11 @@
 import ttkbootstrap as ttk
-from dynamic_updater import DynamicUpdater
-from prayer_times import read_prayer_times, next_prayer_time
-
-import ttkbootstrap as ttk
 from prayer_times import read_prayer_times
 from dynamic_updater import DynamicUpdater
 
 class PrayerTimeGUI(ttk.Window):
     def __init__(self):
         # Main window
-        super().__init__(themename='darkly')
+        super().__init__(themename='cyborg')
         self.attributes('-fullscreen', True)
         self.bind('<Escape>', lambda event: self.quit())
 
@@ -132,22 +128,22 @@ class PrayerTimeEntry(ttk.Frame):
         self.prayer_time_label.pack(expand=True, fill='both')
 
         if prayer_name == 'Fajr':
-            ttk.Label(self, text="Iqamah: 7:00AM", font=('Times New Roman', 13, 'bold'), anchor='center',foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: 7:00AM", font=('Times New Roman', 15, 'bold'), anchor='center',foreground='white').pack(expand=True, fill='both')
 
         if prayer_name == 'Sunrise':
                 ttk.Label(self).pack(expand=True, fill='both')
 
         if prayer_name == 'Dhuhr':
-            ttk.Label(self, text="Iqamah: 2:00PM", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: 2:00PM", font=('Times New Roman', 15, 'bold'), anchor='center', foreground='white').pack(expand=True, fill='both')
 
         if prayer_name == 'Asr':
-            ttk.Label(self, text="Iqamah: Asr + 5 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Asr + 5 minutes", font=('Times New Roman', 15, 'bold'), anchor='center', foreground='white').pack(expand=True, fill='both')
 
         if prayer_name == 'Maghrib':
-            ttk.Label(self, text="Iqamah: Maghrib + 5 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Maghrib + 5 minutes", font=('Times New Roman', 15, 'bold'), anchor='center', foreground='white').pack(expand=True, fill='both')
 
         if prayer_name == 'Isha':
-            ttk.Label(self, text="Iqamah: Isha + 10 minutes", font=('Times New Roman', 13, 'bold'), anchor='center', foreground='grey').pack(expand=True, fill='both')
+            ttk.Label(self, text="Iqamah: Isha + 10 minutes", font=('Times New Roman', 15, 'bold'), anchor='center', foreground='white').pack(expand=True, fill='both')
 
     def update_time(self, new_prayer_time):
         self.prayer_time_label.config(text=new_prayer_time)
