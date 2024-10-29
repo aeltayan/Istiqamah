@@ -5,8 +5,8 @@ from dynamic_updater import DynamicUpdater
 
 from PIL import Image, ImageTk
 
-GREEN = "#3E7D5D"
-# GREEN = "#127958"
+# GREEN = "#3E7D5D"
+GREEN = "#127958"
 GOLD  = "#D4AF37"
 WHITE = "#F5F5F5"
 DGRAY = "#141414"
@@ -51,7 +51,7 @@ class TopFrame(ttk.Frame):
         clock_frame = ttk.Frame(data_frame)
 
         logo = Image.open('msa.png')
-        logo = logo.resize((300, 150))  
+        logo = logo.resize((240,120))  
         self.logo = ImageTk.PhotoImage(logo)  
 
         title_label = ttk.Label(title_frame, image=self.logo, background=DGRAY, anchor='center')
