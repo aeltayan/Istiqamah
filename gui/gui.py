@@ -157,6 +157,7 @@ class PrayerTimeEntry(ttk.Frame):
 
         if prayer_name == 'Sunrise':
                 ttk.Label(self).pack(expand=True, fill='both')
+            
 
         if prayer_name == 'Dhuhr':
             ttk.Label(self, text="Iqamah: 1:00PM", font=('Times New Roman', 16, 'bold'), anchor='center', foreground=LGRAY).pack(expand=True, fill='both')
