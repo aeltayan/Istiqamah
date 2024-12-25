@@ -10,7 +10,7 @@ class DynamicUpdater:
         self.iqamah_config = {
             'Fajr': {'fixed': '7:00 AM'},
             'Sunrise': None,
-            'Dhuhr': {'fixed': '6:28 PM'},
+            'Dhuhr': {'fixed': '1:00 PM'},
             'Asr': {'offset_minutes': 5},
             'Maghrib': {'offset_minutes': 5},
             'Isha': {'offset_minutes': 10},
