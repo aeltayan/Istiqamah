@@ -1,7 +1,6 @@
 import time
 from datetime import datetime, timedelta
 from hijri_converter import convert
-import tkinter as tk
 
 class DynamicUpdater:
     def __init__(self, root, prayer_times):
@@ -15,42 +14,9 @@ class DynamicUpdater:
             'Maghrib': {'offset_minutes': 5},
             'Isha': {'offset_minutes': 10},
         }
-        self.duaas = self.load_duaas('duaas.txt')
-        self.duaa_index = 0
-        self.duaa_screen_active = False
-        self.today_iqamah_times = {}
+        self.today_iqamah_times = {'Fajr': None, 'Dhuhr': None, 'Asr': None, 'Maghrib': None, 'Isha': None}
         self.compute_iqamah_times()
         self.check_iqamah_times()
-
-    def load_duaas(self, filename):
-        with open(filename, 'r', encoding='utf-8') as f:
-            content = f.read()
-            duaa_sections = content.strip().split('---')
-            duaas = []
-            for section in duaa_sections:
-                parts = section.strip().split('||')
-                parts = [part.strip() for part in parts]  # Clean whitespace
-                if len(parts) == 3:
-                    # All parts are present (Arabic, transliteration, English)
-                    duaas.append({
-                        'arabic': parts[0],
-                        'transliteration': parts[1],
-                        'english': parts[2]
-                    })
-                elif len(parts) == 2 and parts[0] == '':  
-                    # Handle case where Arabic is missing
-                    duaas.append({
-                        'arabic': '',  # No Arabic text
-                        'transliteration': parts[0],
-                        'english': parts[1]
-                    })
-                elif len(parts) == 0 or all(x == '' for x in parts):  
-                    # Skip completely empty sections
-                    continue
-                else:
-                    print(f"Warning: Malformed section in {filename}: {section.strip()}")
-            return duaas
-
 
     def update_clock(self, live_clock):
         current_time = time.strftime("%I:%M %p")
@@ -64,11 +30,11 @@ class DynamicUpdater:
         current_date = datetime.now().strftime("%A, %B %d, %Y")
         current_date_str_len = len(current_date)
 
-        hijri_date_obj = convert.Gregorian(datetime.now().year, datetime.now().month, datetime.now().day).to_hijri()
-        hijri_date_str = f"{hijri_date_obj.day} {hijri_date_obj.month_name()} {hijri_date_obj.year} AH"
+        #hijri_date_obj = convert.Gregorian(datetime.now().year, datetime.now().month, datetime.now().day).to_hijri()
+        #hijri_date_str = f"{hijri_date_obj.day} {hijri_date_obj.month_name()} {hijri_date_obj.year} AH"
 
         live_date.config(text=f'{current_date:>{current_date_str_len}}')
-        live_hijri_date.config(text=f'{hijri_date_str:<{current_date_str_len}}')
+        #live_hijri_date.config(text=f'{hijri_date_str:<{current_date_str_len}}')
         live_date.after(1000, lambda: self.update_date(live_date, live_hijri_date))
 
     def compute_iqamah_times(self):
@@ -107,34 +73,46 @@ class DynamicUpdater:
         seconds_until_midnight = (midnight - now).total_seconds()
         self.root.after(int(seconds_until_midnight * 1000), self.compute_iqamah_times)
 
-    def update_prayer_times(self, parent_widget, prayer_time_entries):
+    def update_prayer_times(self, prayer_time_entries):
         current_month = datetime.now().strftime('%B')
         current_day = int(datetime.now().strftime('%d'))
 
         today_prayer_times = self.prayer_times[current_month][current_day]
 
-        prayer_time_entries['Fajr'].update_time(today_prayer_times['Fajr'].replace("AM", "").replace("PM", "").strip())
-        prayer_time_entries['Sunrise'].update_time(today_prayer_times['Sunrise'].replace("AM", "").replace("PM", "").strip())
-        prayer_time_entries['Dhuhr'].update_time(today_prayer_times['Dhuhr'].replace("AM", "").replace("PM", "").strip())
-        prayer_time_entries['Asr'].update_time(today_prayer_times['Asr'].replace("AM", "").replace("PM", "").strip())
-        prayer_time_entries['Maghrib'].update_time(today_prayer_times['Maghrib'].replace("AM", "").replace("PM", "").strip())
-        prayer_time_entries['Isha'].update_time(today_prayer_times['Isha'].replace("AM", "").replace("PM", "").strip())
+        prayer_time_entries['fajr']['adhan'].config(text = f" {today_prayer_times['Fajr'].replace('AM', '').replace('PM', '').strip()}")
+        prayer_time_entries['fajr']['iqamah'].config(text = f"{'7:00'}")
+
+        prayer_time_entries['sunrise']['adhan'].config(text = f" {today_prayer_times['Sunrise'].replace('AM', '').replace('PM', '').strip()}")
+        
+        prayer_time_entries['dhuhr']['adhan'].config(text = f"{today_prayer_times['Dhuhr'].replace('AM', '').replace('PM', '').strip()}")
+        prayer_time_entries['dhuhr']['iqamah'].config(text = f"{'1:00'}")
+
+        prayer_time_entries['asr']['adhan'].config(text = f" {today_prayer_times['Asr'].replace('AM', '').replace('PM', '').strip()}")
+        prayer_time_entries['asr']['iqamah'].config(text = f"{self.today_iqamah_times['Asr'].strftime('%I:%M').lstrip('0')}")
+
+        prayer_time_entries['maghrib']['adhan'].config(text = f" {today_prayer_times['Maghrib'].replace('AM', '').replace('PM', '').strip()}")
+        prayer_time_entries['maghrib']['iqamah'].config(text = f"{self.today_iqamah_times['Maghrib'].strftime('%I:%M').lstrip('0')}")
+
+        prayer_time_entries['isha']['adhan'].config(text = f" {today_prayer_times['Isha'].replace('AM', '').replace('PM', '').strip()}")
+        prayer_time_entries['isha']['iqamah'].config(text = f"{self.today_iqamah_times['Isha'].strftime('%I:%M').lstrip('0')}")
 
         # Schedule next update
-        parent_widget.after(1000, lambda: self.update_prayer_times(parent_widget, prayer_time_entries))
+        (prayer_time_entries['fajr']['adhan']).after(1000, lambda: self.update_prayer_times(prayer_time_entries))
 
-    def countdown(self, countdown_label):
+    def countdown(self, countdown_prayer_label, countdown_time_label):
         next_prayer, time_difference = self.next_prayer_time()
         time_difference -= 0
 
         hours, remainder = divmod(time_difference, 3600)
         minutes, seconds = divmod(remainder, 60)
 
-        countdown_str = f"{next_prayer} in: {int(hours):02}:{int(minutes):02}:{int(seconds):02}"
+        countdown_str_prayer = f"{next_prayer:2} {'is':2} {'in':2} : "
+        countdown_str_time = f"{int(hours):02} : {int(minutes):02} : {int(seconds):02}"
 
-        countdown_label.config(text=countdown_str)
+        countdown_prayer_label.config(text=countdown_str_prayer.upper())
+        countdown_time_label.config(text=countdown_str_time)
 
-        countdown_label.after(1000, lambda: self.countdown(countdown_label))
+        countdown_time_label.after(1000, lambda: self.countdown(countdown_prayer_label, countdown_time_label))
 
     def next_prayer_time(self):
         current_time = datetime.now()
@@ -169,74 +147,11 @@ class DynamicUpdater:
     def check_iqamah_times(self):
         current_time = datetime.now()
         for prayer_name, iqamah_time in self.today_iqamah_times.items():
-            # Check if it's 4 minutes after Iqamah time
-            scheduled_duaa_time = iqamah_time + timedelta(minutes=4)
-            if scheduled_duaa_time <= current_time < scheduled_duaa_time + timedelta(seconds=1):
-            # Time to show the Dua screen
-                self.show_duaa_screen()
+            if iqamah_time <= current_time < iqamah_time + timedelta(seconds=1):
+                # Iqamah time just hit
+                # self.show_duaa_screen()
                 break
 
         # Schedule the next check
         self.root.after(1000, self.check_iqamah_times)
 
-    def show_duaa_screen(self):
-        if self.duaa_screen_active:
-            return  # Already showing
-
-        self.duaa_screen_active = True
-        self.duaa_overlay = tk.Frame(self.root, bg='#ADD8E6')  # Light blue background
-        self.duaa_overlay.place(x=0, y=0, relwidth=1, relheight=1)
-        
-        # Transliteration text label (large, bold, centered)
-        self.transliteration_label = tk.Label(
-            self.duaa_overlay,
-            text='',
-            font=('Arial', 90, 'bold'),  # Large font for readability
-            fg='#000000',               # Black text for clarity
-            bg='#ADD8E6',               # Light blue background
-            wraplength=self.root.winfo_screenwidth() - 100,  # Keep text within screen bounds
-            justify='center',           # Center the text
-            anchor='center'             # Align the text vertically and horizontally
-        )
-        self.transliteration_label.pack(expand=True, fill='both', pady=(50, 20))  # Add padding for spacing
-        
-        # Translation text label (smaller, italics, bottom-aligned)
-        self.translation_label = tk.Label(
-            self.duaa_overlay,
-            text='',
-            font=('Arial', 40, 'italic'),  # Smaller font and italicized for translation
-            fg='#000000',                 # Black text for clarity
-            bg='#ADD8E6',                 # Light blue background
-            wraplength=self.root.winfo_screenwidth() - 100,  # Keep text within screen bounds
-            justify='center',             # Center the text horizontally
-            # anchor='s'                    # Align the text at the bottom
-        )
-        self.translation_label.pack(expand=True, fill='both', pady=(20, 50))  # Add padding for spacing
-
-        # Start displaying duaas
-        self.display_next_duaa()
-
-        # Schedule removal of the Dua screen after 10 minutes
-        self.root.after(10 * 60 * 1000, self.hide_duaa_screen)
-
-    def display_next_duaa(self):
-        if not self.duaa_screen_active:
-            return
-
-        duaa = self.duaas[self.duaa_index]
-        transliteration = duaa['transliteration']
-        english_text = duaa['english']
-
-        # Update the transliteration and translation labels
-        self.transliteration_label.config(text=transliteration)
-        self.translation_label.config(text=english_text)
-
-        # Cycle through the Duaa list
-        self.duaa_index = (self.duaa_index + 1) % len(self.duaas)
-
-        # Change Duaa every 20 seconds (adjust timing as needed)
-        self.root.after(20000, self.display_next_duaa)
-
-    def hide_duaa_screen(self):
-        self.duaa_overlay.destroy()
-        self.duaa_screen_active = False

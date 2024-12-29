@@ -1,0 +1,21 @@
+
+[Unit]
+Description = Run Istiqamah GUI on Boot
+After = network.target
+Wants = graphical.target
+
+
+[Service]
+ExecStart =/home/msauofa/Dev/new/istiqamah/gui/myenv/bin/python3 /home/msauofa/Dev/new/istiqamah/gui/main.py
+WorkingDirectory = /home/msauofa/Dev/new/istiqamah/gui
+StandardOutput = inherit
+StandardError = inherit
+Restart = always
+RestartSec = 30
+User = msauofa
+Environment = DISPLAY=:0
+Execstop = kill -9 python
+
+
+[Install]
+WantedBy = graphical.target
